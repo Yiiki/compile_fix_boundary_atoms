@@ -11,8 +11,22 @@ type(config) :: ac
 
 character*256 :: fcfg,fout,fchk
 logical :: iqst
+character*256 :: ftmp
+integer*4 :: ios
+
+real*8 :: atol=2.d-1 ! unit: Angstrom
 
 call getarg(1,fcfg)
+
+call getarg(2,ftmp,status=ios)
+
+if(ios.gt.0) then
+  read(ftmp,*) atol
+else
+  atol=2.d-1
+end if
+
+write(6,*) "atol  =  ", atol
 
 write(fout,141) "fix.", trim(fcfg)
 write(fchk,141) "chk.", trim(fout)
@@ -58,7 +72,6 @@ end subroutine chk_atoms
 subroutine fix_atoms()
 implicit none
 integer*4 :: iatom,i
-real*8,parameter :: atol=2.d-1 ! unit: Angstrom
 real*8 :: rad(3)
 logical :: boundary
 do i=1,3
